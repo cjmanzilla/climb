@@ -28,12 +28,21 @@
         .option:hover {
             background-color: #e0e0e0;
         }
+        .active {
+            background-color: #ddd;
+        }
     </style>
 </head>
 <body>
 
 <div id="quiz-container">
     <h1>Rock Climbing Quiz</h1>
+    <div>
+        <button id="easyBtn">Easy</button>
+        <button id="mediumBtn">Medium</button>
+        <button id="hardBtn">Hard</button>
+        <p id="streak">Streak: 0</p>
+    </div>
     <h2 id="climb-name"></h2>
     <div class="options">
         <div class="option"></div>
@@ -45,208 +54,88 @@
 </div>
 
 <script>
-    var climbingRoutes = [
-{ name: "Blond Ike", location: "Half Dome"},
-{ name: "Regular Northwest Face of Half Dome (RNWF)", location: "Half Dome"},
-{ name: "Autobahn", location: "Half Dome"},
-{ name: "The Xue Way", location: "Half Dome"},
-{ name: "Growing Up", location: "Half Dome"},
-{ name: "Steck-Salathe", location: "Sentinel Rock"},
-{ name: "Epidemia de Opiáceos", location: "Glacier Point Apron"},
-{ name: "Sweet Abilene", location: "Glacier Point Apron"},
-{ name: "Hanging Pillar", location: "Glacier Point Apron"},
-{ name: "Mojo Rising", location: "Glacier Point Apron"},
-{ name: "Hall of Mirrors", location: "Glacier Point Apron"},
-{ name: "Tightrope", location: "Glacier Point Apron"},
-{ name: "Mr. Natural", location: "Glacier Point Apron"},
-{ name: "Piss Jug", location: "Glacier Point Apron"},
-{ name: "Exploited", location: "The Chapel Wall"},
-{ name: "The Great Escape", location: "The Chapel Wall"},
-{ name: "Killa Beez", location: "The Chapel Wall"},
-{ name: "Switchblade", location: "The Chapel Wall"},
-{ name: "Cosmic Debris", location: "The Chapel Wall"},
-{ name: "Central Pillar of Frenzy", location: "Cathedral Area"},
-{ name: "Freewheelin'", location: "Cathedral Area"},
-{ name: "Modern Alchemy", location: "Cathedral Area"},
-{ name: "Stoner's Highway", location: "Cathedral Area"},
-{ name: "Mother Earth", location: "Cathedral Area"},
-{ name: "Top Dog", location: "Cathedral Area"},
-{ name: "Direct Start to Central Pillar", location: "Cathedral Area"},
-{ name: "Border Country", location: "Cathedral Area"},
-{ name: "Gaia", location: "Cathedral Area"},
-{ name: "Father Time", location: "Cathedral Area"},
-{ name: "Northeast Buttress", location: "Cathedral Area"},
-{ name: "Sight Reader", location: "Cathedral Area"},
-{ name: "Book of Job", location: "Cathedral Area"},
-{ name: "Power Point", location: "Cathedral Area"},
-{ name: "The Crucifix", location: "Cathedral Area"},
-{ name: "Spire it up (first 2 pitches)", location: "Cathedral Area"},
-{ name: "King for a Day", location: "Cathedral Area"},
-{ name: "Trick of the Tail", location: "Cathedral Area"},
-{ name: "Empire", location: "Cathedral Area"},
-{ name: "Scarface (Free)", location: "Liberty Cap"},
-{ name: "Mahtah", location: "Liberty Cap"},
-{ name: "Manana", location: "Sentinel Creek Area"},
-{ name: "Yin-Yang", location: "Sentinel Creek Area"},
-{ name: "Final Cut", location: "Public Sanitation Wall"},
-{ name: "Black Fly", location: "Public Sanitation Wall"},
-{ name: "Unknown and Super Fun!", location: "Public Sanitation Wall"},
-{ name: "Unknown but Splitter", location: "Public Sanitation Wall"},
-{ name: "Big Easy", location: "Public Sanitation Wall"},
-{ name: "Windjammer", location: "The Widow's Tears Area"},
-{ name: "Riding on the Wind", location: "The Widow's Tears Area"},
-{ name: "Wayward Son", location: "Lost Brother"},
-{ name: "Roulette", location: "Leaning Tower"},
-{ name: "West Face", location: "Leaning Tower"},
-{ name: "Westie Face", location: "Leaning Tower"},
-{ name: "The Thief", location: "Leaning Tower"},
-{ name: "Voyager", location: "Leaning Tower"},
-{ name: "More Burly than Girly", location: "Leaning Tower"},
-{ name: "Romulan Warbird", location: "Leaning Tower"},
-{ name: "Prime Directive", location: "Leaning Tower"},
-{ name: "Dream Team", location: "Leaning Tower"},
-{ name: "The Nexus AKA The Niels Tietze Memorial Route", location: "Leaning Tower"},
-{ name: "The Final Frontier", location: "Leaning Tower"},
-{ name: "Bunnell Boa", location: "Little Yosemite Valley"},
-{ name: "Sacherer Cracker", location: "El Capitan"},
-{ name: "Peter Left", location: "El Capitan"},
-{ name: "Moby Dick Center", location: "El Capitan"},
-{ name: "Salathe (pitch 1)", location: "El Capitan"},
-{ name: "Masquerade/Call Me Ishmael", location: "El Capitan"},
-{ name: "Rock Neurotic", location: "El Capitan"},
-{ name: "TRON", location: "El Capitan"},
-{ name: "The Shield", location: "El Capitan"},
-{ name: "Sunkist", location: "El Capitan"},
-{ name: "The Nose", location: "El Capitan"},
-{ name: "Salathé Wall", location: "El Capitan"},
-{ name: "West Buttress", location: "El Capitan"},
-{ name: "Quo Vadis", location: "El Capitan"},
-{ name: "Muir Wall", location: "El Capitan"},
-{ name: "Wings of Steel", location: "El Capitan"},
-{ name: "Jolly Roger", location: "El Capitan"},
-{ name: "West Face", location: "El Capitan"},
-{ name: "Freerider", location: "El Capitan"},
-{ name: "Golden Gate", location: "El Capitan"},
-{ name: "Heart Route (Free)", location: "El Capitan"},
-{ name: "El Corazon", location: "El Capitan"},
-{ name: "Mr. Midwest", location: "El Capitan"},
-{ name: "Magic Mushroom", location: "El Capitan"},
-{ name: "Scorched Earth", location: "El Capitan"},
-{ name: "Tribal Rite", location: "El Capitan"},
-{ name: "South Seas", location: "El Capitan"},
-{ name: "Mescalito", location: "El Capitan"},
-{ name: "Lost in America", location: "El Capitan"},
-{ name: "Ephemeron", location: "El Capitan"},
-{ name: "Neptune", location: "El Capitan"},
-{ name: "Atlantic Ocean Wall", location: "El Capitan"},
-{ name: "El Niño", location: "El Capitan"},
-{ name: "Afroman", location: "Washington Column"},
-{ name: "Jo Jo", location: "Washington Column"},
-{ name: "Astroman", location: "Washington Column"},
-{ name: "Crest Jewel (and Crest Jewel Direct)", location: "North Dome"},
-{ name: "Lost Arrow Tip", location: "Yosemite Falls Area"},
-{ name: "Lost Arrow Spire Direct", location: "Yosemite Falls Area"},
-{ name: "Freestone (Geek Towers, Left)", location: "Yosemite Falls Area"},
-{ name: "Resist!", location: "Ribbon Falls Area"},
-{ name: "Direct Action", location: "Ribbon Falls Area"},
-{ name: "Gates of Delirium", location: "Ribbon Falls Area"},
-{ name: "The Hourglass, Right", location: "Ribbon Falls Area"},
-{ name: "Golden Corners (Blue Collar Free)", location: "Ribbon Falls Area"},
-{ name: "Teabag Wisdom", location: "Mount Watkins"},
-{ name: "South Face", location: "Mount Watkins"},
-{ name: "The Good Book", location: "Camp 4 Area"},
-{ name: "Dust in the Wind", location: "Camp 4 Area"},
-{ name: "King Snake", location: "Royal Arches"},
-{ name: "*CLOSED FOR SAFETY* Sons of Yesterday", location: "Royal Arches"},
-{ name: "*CLOSED FOR SAFETY* Super Natural", location: "Royal Arches"},
-{ name: "*CLOSED FOR SAFETY * Serenity Crack", location: "Royal Arches"},
-{ name: "Devil Waves", location: "Royal Arches"},
-{ name: "The Rambler", location: "Royal Arches"},
-{ name: "Bad Ass Momma", location: "Royal Arches"},
-{ name: "Space Invaders", location: "Royal Arches"},
-{ name: "The Moratorium", location: "Schultz's Ridge"},
-{ name: "Mark of the Beast", location: "Schultz's Ridge"},
-{ name: "The Silent Freeway", location: "Slab Happy Pinnacle"},
-{ name: "Random Blessings", location: "Slab Happy Pinnacle"},
-{ name: "Golden Years", location: "Slab Happy Pinnacle"},
-{ name: "Maps and Legends", location: "Indian Canyon"},
-{ name: "New Diversions", location: "New Diversions"},
-{ name: "Reed's Pinnacle-Direct Route", location: "Reed's Pinnacle"},
-{ name: "Lunatic Fringe", location: "Reed's Pinnacle"},
-{ name: "Open Your Eyes", location: "Reed's Pinnacle"},
-{ name: "The North Face", location: "The Rostrum"},
-{ name: "Kauk-kulator", location: "The Rostrum"},
-{ name: "Blind Faith", location: "The Rostrum"},
-{ name: "Alien Finish", location: "The Rostrum"},
-{ name: "Fun Terminal", location: "Elephant Rock"},
-{ name: "Wicked Gravity", location: "Elephant Rock"},
-{ name: "Book of Hate", location: "Elephant Rock"},
-{ name: "Crack of Doom", location: "Elephant Rock"},
-{ name: "Hotline", location: "Elephant Rock"},
-{ name: "The Tusk", location: "Elephant Rock"},
-{ name: "Sawzall Arete", location: "Elephant Rock"},
-{ name: "Crack of Mercy", location: "Elephant Rock"},
-{ name: "Ride the Widening", location: "Five and Dime Cliff"},
-{ name: "Five and Dime", location: "Five and Dime Cliff"},
-{ name: "Fun n' Done", location: "Five and Dime Cliff"},
-{ name: "Mark of the Shark", location: "Five and Dime Cliff"},
-{ name: "Rocky Horror Show", location: "Pat and Jack Pinnacle"},
-{ name: "Separate Reality", location: "Wildcat Falls & Above the Cookie"},
-{ name: "Tales of Power", location: "Wildcat Falls & Above the Cookie"},
-{ name: "Fish Crack", location: "Cascade Area"},
-{ name: "Crimson Cringe", location: "Cascade Area"},
-{ name: "The Phoenix", location: "Cascade Area"},
-{ name: "Meltdown", location: "Cascade Area"},
-{ name: "Flight Attendant", location: "The Jungle Gym"},
-{ name: "Deosoul", location: "Pulpit Rock"},
-{ name: "Midterm", location: "Arch Rock"},
-{ name: "Gripper", location: "Arch Rock"},
-{ name: "New Dimensions", location: "Arch Rock"},
-{ name: "Anticipation", location: "Arch Rock"},
-{ name: "Mad Dogs Direct", location: "Arch Rock"},
-{ name: "Tips", location: "This and That Cliff"},
-{ name: "Scram", location: "This and That Cliff"},
-{ name: "Otherworld", location: "Parkline Slab"},
-{ name: "Coup d'Etat", location: "U.S.G.S. Wall"},
-{ name: "Finger Lickin'", location: "Finger Lickin' Area"},
-{ name: "Pinky Paralysis", location: "Finger Lickin' Area"},
-{ name: "Cream", location: "Cream"},
-{ name: "Discipline", location: "Kat Pinnacle"},
-{ name: "Keep the Muscle, Lose The Fat", location: "Knobby Wall"},
-{ name: "Wheat Thin", location: "Cookie Area"},
-{ name: "Outer Limits", location: "Cookie Area"},
-{ name: "Twilight Zone", location: "Cookie Area"},
-{ name: "Catchy Corner", location: "Cookie Area"},
-{ name: "Crack-a-Go-Go", location: "Cookie Area"},
-{ name: "Butterballs", location: "Cookie Area"},
-{ name: "Red Zinger", location: "Cookie Area"},
-{ name: "Cookie Monster", location: "Cookie Area"},
-{ name: "America's Cup", location: "Cookie Area"},
-{ name: "Tennessee Wall (P1: Tennessee Strings)", location: "Cookie Area"},
-{ name: "Cookie Cutter", location: "Cookie Area"},
-{ name: "Wilde", location: "Cookie Area"},
-{ name: "The Truth", location: "Cookie Area"},
-{ name: "Sixty Forty", location: "Cookie Area"},
-{ name: "The Higher Truth", location: "Cookie Area"},
-{ name: "Evil Sede", location: "Cookie Area"},
-{ name: "First Blood", location: "Cookie Area"},
-{ name: "The Greenleaf p. 1", location: "Cookie Area"},
-{ name: "The Greenleaf p. 2", location: "Cookie Area"},
-{ name: "Iced Earth", location: "Cookie Area"},
-{ name: "Iced Earth Extension", location: "Cookie Area"},
-{ name: "New Leaf (2nd pitch of GL)", location: "Cookie Area"},
-{ name: "Owl Roof", location: "The Owl"}
+    var easyRoutes = [
+{ name: "Positive Vibrations", location: "Incredible Hulk "},
+{ name: "Mithril Dihedral", location: "Mt. Russell "},
+{ name: "Sunspot Dihedral", location: "Incredible Hulk "},
+{ name: "Thunderbolt to Sill Traverse", location: "Thunderbolt Peak "},
+{ name: "The Polish Route", location: "Incredible Hulk "},
+{ name: "The Venturi Effect", location: "Incredible Hulk "},
+{ name: "The Polish Route", location: "5.10+"},
+{ name: "Positive Vibrations", location: "5.11a"},
+{ name: "Sunspot Dihedral", location: "5.11b"},
+{ name: "The Venturi Effect", location: "5.12c"},
+{ name: "Mithril Dihedral", location: "5.9+"},
+{ name: "Thunderbolt to Sill Traverse", location: "5.9 Easy Snow"}
+    ];
+
+    var mediumRoutes = [
+{ name: "South Face", location: "Charlotte Dome "},
+{ name: "Fishhook Arete", location: "Mt. Russell "},
+{ name: "Sun Ribbon Arete", location: "Temple Crag "},
+{ name: "Direct North Buttress", location: "Merriam Peak "},
+{ name: "Southeast Face", location: "Clyde Minaret "},
+{ name: "Evolution Traverse", location: "Mt. Darwin "},
+{ name: "Southeast Face, Direct Start", location: "Clyde Minaret "},
+{ name: "Bastille Buttress - Beckey Route", location: "Lone Pine Peak "},
+{ name: "Fishhook ArÃªte", location: "5.9"},
+{ name: "Bastille Buttress - Beckey Route", location: "5.10d A0"},
+{ name: "Sun Ribbon Arete", location: "5.10a"},
+{ name: "Evolution Traverse", location: "5.9"},
+{ name: "Direct North Buttress", location: "5.10b PG13"},
+{ name: "Southeast Face", location: "5.8+"},
+{ name: "Southeast Face, Direct Start", location: "5.9+"},
+{ name: "South Face", location: "5.8"},
+{ name: "Fishhook ArÃªte", location: "8 pitch"},
+{ name: "Bastille Buttress - Beckey Route", location: "15 pitch"},
+{ name: "Sun Ribbon Arete", location: "22 pitch"},
+{ name: "Evolution Traverse", location: "5 pitch"},
+{ name: "Direct North Buttress", location: "7 pitch"},
+{ name: "Southeast Face", location: "13 pitch"},
+{ name: "Southeast Face, Direct Start", location: "2 pitch"},
+{ name: "South Face", location: "12 pitch"}
+    ];
+
+    var hardRoutes = [
+        { name: "Hard Route 1", location: "Location P" },
+        { name: "Hard Route 2", location: "Location Q" },
+        { name: "Hard Route 3", location: "Location R" }
     ];
 
     var options = document.querySelectorAll('.option');
     var resultText = document.getElementById('result');
+    var streakText = document.getElementById('streak');
+    var streakCount = 0;
+    var currentDifficulty = 'easy'; // Default difficulty is 'easy'
 
-    function getRandomRoute() {
-        return climbingRoutes[Math.floor(Math.random() * climbingRoutes.length)];
+    function setDifficulty(difficulty) {
+        currentDifficulty = difficulty;
+        streakCount = 0; // Reset streak count when difficulty changes
+        displayQuestion();
+        updateActiveButton(difficulty);
+        streakText.innerText = 'Streak: ' + streakCount; // Update streak count display
+    }
+
+    function getRandomRoute(difficulty) {
+        var routes;
+        switch (difficulty) {
+            case 'easy':
+                routes = easyRoutes;
+                break;
+            case 'medium':
+                routes = mediumRoutes;
+                break;
+            case 'hard':
+                routes = hardRoutes;
+                break;
+            default:
+                routes = easyRoutes; // Default to easy routes
+        }
+        return routes[Math.floor(Math.random() * routes.length)];
     }
 
     function displayQuestion() {
-        var selectedRoute = getRandomRoute();
+        var selectedRoute = getRandomRoute(currentDifficulty);
         document.getElementById("climb-name").textContent = selectedRoute.name;
 
         var correctIndex = Math.floor(Math.random() * 4);
@@ -256,9 +145,9 @@
                 option.textContent = correctLocation;
                 option.setAttribute('data-correct', 'true');
             } else {
-                var randomLocation = climbingRoutes[Math.floor(Math.random() * climbingRoutes.length)].location;
+                var randomLocation = getRandomRoute(currentDifficulty).location;
                 while (randomLocation === correctLocation) {
-                    randomLocation = climbingRoutes[Math.floor(Math.random() * climbingRoutes.length)].location;
+                    randomLocation = getRandomRoute(currentDifficulty).location;
                 }
                 option.textContent = randomLocation;
                 option.setAttribute('data-correct', 'false');
@@ -269,9 +158,12 @@
     function checkAnswer(clickedOption) {
         if (clickedOption.getAttribute('data-correct') === 'true') {
             resultText.innerText = 'Correct! ' + clickedOption.textContent + ' is the correct location.';
+            streakCount++;
         } else {
             resultText.innerText = 'Incorrect. The correct location is ' + document.querySelector('.option[data-correct="true"]').textContent + '.';
+            streakCount = 0;
         }
+        streakText.innerText = 'Streak: ' + streakCount;
 
         setTimeout(function() {
             resultText.innerText = '';
@@ -279,10 +171,29 @@
         }, 1500);
     }
 
+    function updateActiveButton(difficulty) {
+        document.querySelectorAll('button').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        document.getElementById(difficulty + 'Btn').classList.add('active');
+    }
+
     options.forEach(function(option) {
         option.addEventListener('click', function() {
             checkAnswer(this);
         });
+    });
+
+    document.getElementById('easyBtn').addEventListener('click', function() {
+        setDifficulty('easy');
+    });
+
+    document.getElementById('mediumBtn').addEventListener('click', function() {
+        setDifficulty('medium');
+    });
+
+    document.getElementById('hardBtn').addEventListener('click', function() {
+        setDifficulty('hard');
     });
 
     displayQuestion();
